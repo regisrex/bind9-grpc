@@ -1,0 +1,59 @@
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: dns_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: dns_service
+      POSTGRES_USER: dns_user
+      POSTGRES_PASSWORD: dns_password_secure_2024
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dns_user -d dns_service"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - dns_network
+
+  bind9:
+    image: ubuntu/bind9:latest
+    container_name: dns_bind9
+    restart: unless-stopped
+    ports:
+      - "53:53"
+      - "53:53/udp"
+    volumes:
+      - bind_zones:/etc/bind
+    networks:
+      - dns_network
+
+  dns-service:
+    build: .
+    container_name: dns_grc_service
+    restart: unless-stopped
+    environment:
+      - DATABASE_URL=postgresql://dns_user:dns_password_secure_2024@postgres:5432/dns_service
+      - DNS_ADDRESS=0.0.0.0:5550
+      - BIND9_PATH=/etc/bind/zones
+      - BIND9_CONFIGFILE=/etc/bind/named.conf.local
+    volumes:
+      - bind_zones:/etc/bind
+    ports:
+      - "5550:5550"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      bind9:
+        condition: service_started
+    networks:
+      - dns_network
+
+volumes:
+  postgres_data:
+  bind_zones:
+networks:
+  dns_network:
+    driver: bridge

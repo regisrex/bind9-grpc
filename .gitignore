@@ -1,0 +1,7 @@
+/target
+bind
+pushtoprod.sh
+verify-deployment.sh
+test_serial_numbers/
+config.bat
+node_modules

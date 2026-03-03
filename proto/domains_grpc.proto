@@ -1,0 +1,37 @@
+syntax = "proto3";  
+
+package domains_grpc;  
+
+service DomainService {
+  rpc CreateDomain (CreateDomainDto) returns (RpcDomain);  // RPC method to create a domain
+  rpc DeleteDomain (DeleteDomainRequest) returns (DeleteDomainResponse);  // RPC method to delete a domain
+}
+
+
+message CreateDomainDto {
+  string domain = 1;
+  string ip_address =2;
+};
+
+message RpcDomain {
+  string id  = 1;
+  string domain = 2;
+  int64 default_ttl = 3;
+}
+
+message  DNSResponse {
+  string message = 1;
+  bool status = 2;
+  RpcDomain domain  = 3;
+  repeated string errors  = 4;
+}
+
+message DeleteDomainRequest {
+    int32 domain_id = 1;
+}
+
+message DeleteDomainResponse {
+    bool success = 1;
+    string message = 2;
+    repeated string errors = 3;
+}

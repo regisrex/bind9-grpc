@@ -1,0 +1,27 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on:  dns-sl
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up environment
+
+        run: |
+          echo "${{ secrets.PRODUCTION_SLDNS_ENV }}" > .env
+          ls -la
+
+
+      - name: Stop existing containers
+        run: docker compose down
+
+      - name: Deploy with Docker Compose
+        run: docker compose up -d --build

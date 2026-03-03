@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package domain_records_grpc;
+
+service DomainRecordService {
+    rpc CreateDomainRecord(CreateDomainRecordDto) returns (RpcDomainRecord);
+    rpc UpdateDomainRecord(UpdateDomainRecordDto) returns (RpcDomainRecord);
+    rpc DeleteDomainRecord(DeleteDomainRecordDto) returns (RpcDomainRecord);
+    rpc GetRecordById(GetRecordByIdDto) returns (RpcDomainRecord);
+}
+
+
+message CreateDomainRecordDto {
+    int64 ttl = 1;
+    string class = 2;
+    string host = 3;
+    string record_type = 4;
+    int64 mx_preference = 5;
+    string value = 6;
+    int32 domain_id = 7;
+
+}
+message RpcDomainRecord {
+    int32 id = 1;
+    string host = 2;
+    int64 ttl = 3;
+    string type = 4;
+    int64 priority = 5;
+    string value =6;
+}
+
+message UpdateDomainRecordDto {
+    int32 id = 1;
+    string host = 2;
+    int64 ttl = 3;
+    string value = 4;
+    string type = 5;
+}
+
+message DeleteDomainRecordDto {
+    int32 id = 1;
+}
+
+message GetRecordsForDomainDto {
+    int32 domain_id = 1;
+}
+
+message GetRecordByIdDto {
+    int32 id = 1;
+}
+
+
+enum DomainRecordType {
+    A = 0;     // IPv4 address
+    NS = 1;    // Name server
+    CNAME = 2; // Canonical name
+    PTR = 3;   // Pointer record
+    MX = 4;    // Mail exchange
+    TXT = 5;   // Text record
+    AAAA = 6;  // IPv6 address
+    SRV = 7;   // Service record
+}

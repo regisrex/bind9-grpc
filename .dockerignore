@@ -1,0 +1,44 @@
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+docs/
+
+# CI/CD files
+.github/
+Jenkinsfile
+docker-compose.yml
+.dockerignore
+
+# Logs
+*.log
+
+# Database files
+*.db
+*.sqlite
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# BIND configuration (will be mounted)
+bind/
+
+# Editor backups
+*~
+\#*\#
+.\#*
